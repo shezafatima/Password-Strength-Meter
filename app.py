@@ -3,21 +3,21 @@ import re
 import random
 import string
 
-# List of common (blacklisted) passwords
+
 blacklist = {"password123", "12345678", "qwerty", "abc123", "password", "admin", "letmein", "welcome"}
 
 def generate_strong_password(length=12):
     """Generates a random strong password ensuring inclusion of each required character type."""
     if length < 8:
-        length = 8  # enforce minimum length requirement
-    # Guarantee one character from each category
+        length = 8  
+   
     password_chars = [
         random.choice(string.ascii_lowercase),
         random.choice(string.ascii_uppercase),
         random.choice(string.digits),
         random.choice("!@#$%^&*")
     ]
-    # Fill remaining characters from all allowed characters
+    
     all_chars = string.ascii_letters + string.digits + "!@#$%^&*"
     password_chars += random.choices(all_chars, k=length - 4)
     random.shuffle(password_chars)
@@ -35,32 +35,32 @@ def check_password_strength(password):
     
     If the password is in a blacklist of common passwords, an error is returned.
     """
-    # Check against common passwords (case insensitive)
+    
     if password.lower() in {p.lower() for p in blacklist}:
         return 0, "❌ This is a common password. Please choose a more secure one.", []
 
     score = 0
     feedback = []
     
-    # Length Check (weight = 2)
+    
     if len(password) >= 8:
         score += 2
     else:
         feedback.append("Password should be at least 8 characters long.")
     
-    # Upper & Lowercase Check (weight = 1)
+    
     if re.search(r"[A-Z]", password) and re.search(r"[a-z]", password):
         score += 1
     else:
         feedback.append("Include both uppercase and lowercase letters.")
     
-    # Digit Check (weight = 1)
+    
     if re.search(r"\d", password):
         score += 1
     else:
         feedback.append("Include at least one digit (0-9).")
     
-    # Special Character Check (weight = 1)
+    
     if re.search(r"[!@#$%^&*]", password):
         score += 1
     else:
@@ -77,11 +77,11 @@ def get_strength_rating(score):
     else:
         return "❌ Weak Password - Improve it using the suggestions above."
 
-# --- Streamlit App ---
+
 
 st.title("Password Strength Meter")
 
-# Create two tabs: one for checking passwords and one for generating passwords
+
 tab1, tab2 = st.tabs(["Check Password", "Generate Password"])
 
 with tab1:
